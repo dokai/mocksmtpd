@@ -1,3 +1,8 @@
+== 0.0.4 / unreleased
+
+* Added new configuration option, DecodeBase64, to enable decoding of base64 encoded messages.
+* Fixed a naming typo; recieve -> receive
+
 == 0.0.3 / 2008-11-08
 
 * rescue Process.eid NotImplementedError.
