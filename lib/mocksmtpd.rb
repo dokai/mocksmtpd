@@ -6,6 +6,7 @@ require 'yaml'
 require 'erb'
 require 'nkf'
 require 'smtpserver'
+require 'base64'
 
 class Mocksmtpd
   VERSION = '0.0.3'
@@ -248,6 +249,15 @@ class Mocksmtpd
     src = NKF.nkf("-wm", src)
     subject = src.match(/^Subject:\s*(.+)/i).to_a[1].to_s.strip
     date = src.match(/^Date:\s*(.+)/i).to_a[1].to_s.strip
+
+    if @conf[:DecodeBase64]
+      transfer_encoding = src.match(/^Content-Transfer-Encoding:\s*(.+)/i).to_a[1].to_s.strip
+      if transfer_encoding == 'base64'
+        headers, body = src.split(/\r\n\r\n/)
+        body = Base64.decode64(body) if not body.nil?
+        src = "#{headers}\r\n\r\n#{body}"
+      end
+    end
 
     src = ERB::Util.h(src)
     src = src.gsub(%r{https?://[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+},'<a href="\0">\0</a>')
