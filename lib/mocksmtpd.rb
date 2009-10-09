@@ -218,7 +218,7 @@ class Mocksmtpd
     end
 
     data_cb = Proc.new do |src, sender, recipients|
-      recieve_mail(src, sender, recipients)
+      receive_mail(src, sender, recipients)
     end
 
     @conf[:ServerType] = @daemon ? WEBrick::Daemon : nil
@@ -236,8 +236,8 @@ class Mocksmtpd
     server.start
   end
 
-  def recieve_mail(src, sender, recipients)
-    @logger.info "mail recieved from #{sender}"
+  def receive_mail(src, sender, recipients)
+    @logger.info "mail received from #{sender}"
 
     mail = parse_mail(src, sender, recipients)
 
